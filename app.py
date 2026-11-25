@@ -145,10 +145,12 @@ uploaded = st.sidebar.file_uploader(
 )
 uploads = tuple((f.name, f.getvalue()) for f in uploaded or [])
 demo = st.sidebar.checkbox(
-    "가상 데모 데이터로 보기", value=st.query_params.get("demo") == "1",
+    "가상 데모 데이터로 보기",
+    value=(st.query_params.get("demo") == "1") or not files_signature(DEFAULT_DIR),
     help="실제 광고주 데이터가 아닌, 임의로 만든 가상 데이터로 화면을 보여줍니다. 주소 뒤에 ?demo=1 을 붙이면 기본으로 켜집니다.",
 )
 
+demo = demo and not uploads  # 업로드한 파일이 있으면 업로드 데이터를 우선 사용
 if demo:
     sig = ("demo",)
 elif uploads:
